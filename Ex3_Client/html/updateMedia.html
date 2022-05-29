@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="../js/updateMedia.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <h1 class="display-1">Update Media</h1>
+    <form id="updateMediaForm">
+        <div class="form-group" id="movieIdInputDiv">
+          <label for="movieIdInput">ID</label>
+          <input type="text" name="id" class="form-control" id="movieIdInput" pattern="[a-zA-Z0-9]*" required readonly="readonly">
+        </div>
+        <div class="form-group" id="movieNameInputDiv">
+            <label for="movieNameInput">Media Name</label>
+            <input type="text" name="name" class="form-control" id="movieNameInput" required>
+        </div>
+        <div class="form-check" id="moviePicInputDiv">
+            <label for="moviePicInput">Picture URL</label>
+            <input type="url" name="picture" class="form-control" id="moviePicInput" required>
+        </div>
+        <div class="form-check" id="movieDirectorInputDiv">
+            <label for="movieDirectorInput">Director - Leaving empty won't change the original value</label>
+            <input type="text" name="director" class="form-control" id="movieDirectorInput" pattern="[a-zA-z, , -]*">
+        </div>
+        <div class="form-check" id="movieRDInputDiv">
+            <label for="movieRDInput">Release date</label>
+            <input type="date" name="date" class="form-control" id="movieRDInput" required>
+        </div>
+    
+        <div class="form-check Series" id="SeriesCheckBoxDiv">
+            <label class="form-check-label" for="inlineRadio2">Series</label>
+            <input class="form-check-input Series" type="checkbox"  id="seriesCheckbox"">
+        </div>
+        <div id = "seriesHolder" style="display:none">
+           <label for="howManySeasons">Number of seasons</label>
+           <input type="number" class="form-control" id="howManySeasons" min="1">
+           <div id="seasonsHolder">
+
+           </div>
+        </div>
+        <div class="form-check" id="movieRatingInputDiv">
+            <label for="movieRatingInput">Rating</label>
+            <input type="number" name="rating" class="form-control" id="movieRatingInput" min=1 max="5" required>
+        </div>
+        <button type="submit" name="submit"class="btn btn-primary" ">Submit</button>
+      </form>
+
+
+</body>
+</html>
