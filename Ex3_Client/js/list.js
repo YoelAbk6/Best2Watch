@@ -4,11 +4,11 @@
  */
 
 $(document).ready(function () {
-  getData();
+  getMedia();
 });
 
-//The ajax request that gets the data from the server
-function getData() {
+//The ajax request that gets the media from the server
+function getMedia() {
   $.ajax({
     url: "http://localhost:3001/media",
     type: "GET",
@@ -29,13 +29,13 @@ function createTable(response) {
   let i,
     rows = "";
   //The response is an object, hance we should take the data from the odd cells only
-  for (i = 1; i < response.length; i += 2) {
+  for (i = 0; i < response.length; i++) {
     rows += `<tr>
     <th scope="row">${response[i].id}</th>
     <td >${response[i].name}</td>
     <td> <img src="${response[i].picture}" alt="pic" class="img-fluid img-thumbnail"></td>
     <td>${response[i].rating}</td>
-    <td>${response[i].date}</td>
+    <td>${(new Date(response[i].date)).toLocaleDateString('en-IL')}</td>
     <td>
     <div class="btn-group-vertical">
     <button type="button" class="btn btn-danger">Delete</button>
@@ -81,6 +81,7 @@ function deleteMedia() {
         location.href = "/list";
       },
       error: function (error) {
+        Swal.fire(error.responseText)
         console.log({ mediaId } + " " + error.responseText);
       },
     });
@@ -122,64 +123,51 @@ function addActor() {
   $(".btn-success").click(function () {
     const mediaId = $(this).closest("tr").find("th").text();
 
-    Swal.fire({
-      title: "Add actor form",
-      //Set input fields
-      html: `
-      <input type="text" id="name" class="swal2-input" placeholder="name" >
-      <input type="url" id="picture" class="swal2-input" placeholder="picture url">
-      <input type="url" id="site" class="swal2-input" placeholder="site">
-      `,
-      confirmButtonText: "Submit",
-      preConfirm: () => {
-        //Get input fields
-        const name = Swal.getPopup().querySelector("#name").value;
-        const nameRegex = /^[a-zA-z, , -]*$/;
-        const picture = Swal.getPopup().querySelector("#picture").value;
-        const site = Swal.getPopup().querySelector("#site").value;
-
-        //Validtes the fields
-        if (!name || !picture || !site) {
-          Swal.showValidationMessage(`Please fill all details`);
-        } else if (!nameRegex.test(name)) {
-          Swal.showValidationMessage(`Please enter a valid name`);
-        } else {
-          try {
-            //Validate URLs
-            new URL(picture);
-            new URL(site);
-          } catch (error) {
-            Swal.showValidationMessage(`Please use valid URls`);
-          }
+    $.ajax({
+      url: "http://localhost:3001/actors",
+      type: "GET",
+      success: function (response) {
+        let html = ""
+        for (let i = 0; i < response.length; i++) {
+          html += `
+            <br>
+            <button type="button" class="btn sendActor" value=${response[i]._id}>${response[i].name}</button>
+            <br>
+            `
         }
-
-        return { name: name, picture: picture, site: site };
+        Swal.fire({
+          title: "Choose an Actor",
+          html: html,
+          showCancelButton: true,
+          showConfirmButton: false,
+        })
+        sendActor(mediaId);
       },
-    }).then((result) => {
-      //Construct the JSON
-      if (result.isConfirmed) {
-        res = `{
-          "name": "${result.value.name}",
-          "picture" : "${result.value.picture}",
-          "site": "${result.value.site}"
-      }`;
+      error: function (error) {
+        Swal.fire(error.responseText)
+        console.log(error.responseText);
+      },
+    });
+  });
+}
 
-        //Put call that updates the actors in the json file
-        $.ajax({
-          url: `/media/${mediaId}/actors`,
-          contentType: "application/json",
-          type: "PUT",
-          datatype: "json",
-          data: res,
-          encode: true,
-          success: function () {
-            location.href = "/list";
-          },
-          error: function (error) {
-            console.log(error.responseText);
-          },
-        });
-      }
+function sendActor(mediaId) {
+  $(".sendActor").click(function () {
+    let actorId = $(this).attr("value");
+    $.ajax({
+      url: "/media/" + mediaId + "/actors/" + actorId,
+      contentType: "application/json",
+      type: "PUT",
+      datatype: "json",
+      // data: a,
+      encode: true,
+      success: function () {
+        location.href = "/list";
+      },
+      error: function (error) {
+        Swal.fire(error.responseText)
+        console.log(error.responseText);
+      },
     });
   });
 }
@@ -207,9 +195,9 @@ function displayActors() {
           for (actor in response.actors) {
             table += `
             <tr>
-            <td  scope = "row">${response.actors[actor].name}</td>
-            <td> <img src="${response.actors[actor].picture}" alt="pic" class="img-fluid img-thumbnail"</td>
-            <td> <button class="btn removeActor">Remove</button></td>
+            <td  scope = "row">${response.actors[actor].actor.name}</td>
+            <td> <img src="${response.actors[actor].actor.picture}" alt="pic" class="img-fluid img-thumbnail"</td>
+            <td> <button class="btn removeActor" value=${response.actors[actor].actor._id}>Remove</button></td>
             </tr>
             `;
           }
@@ -225,6 +213,7 @@ function displayActors() {
         deleteActor(mediaId);
       },
       error: function (error) {
+        Swal.fire(error.responseText)
         console.log(error.responseText);
       },
     });
@@ -233,21 +222,21 @@ function displayActors() {
 
 //Deletes actor from the list
 /**
- *
  * @param mediaId The media id from which we want to delete an actor
  */
 function deleteActor(mediaId) {
   $(".removeActor").click(function () {
-    let actorName = $(this).closest("tr").children("td:first").text();
-    console.log("media:" + mediaId + "\nactorName:" + actorName);
+    let actorId = $(this).attr("value");
     $.ajax({
-      url: `http://localhost:3001/media/${mediaId}/actors/${actorName}`,
+      url: `http://localhost:3001/media/${mediaId}/actors/${actorId}`,
       type: "DELETE",
 
-      success: function () {
-        location.href = "/list";
+      success: function (res) {
+        Swal.fire(res);
+        // location.href = "/list";
       },
       error: function (error) {
+        Swal.fire(error.responseText)
         console.log(error.responseText);
       },
     });

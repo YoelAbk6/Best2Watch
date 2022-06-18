@@ -10,7 +10,8 @@ const express = require("express"),
 let router = express.Router();
 
 router.get("/media", userRoutes.read_media);
-router.get("/media/:id", userRoutes.read_media_id);
+router.get("/media/:id", userRoutes.get_media_by_id);
+router.get("/actors", userRoutes.get_actors);
 router.post(
   "/media",
   body("id").notEmpty().isAlphanumeric(),
@@ -27,7 +28,9 @@ router.post(
     .notEmpty(),
   userRoutes.create_media
 );
+router.post("/actor", userRoutes.create_actor);
 router.put("/media/:id", userRoutes.update_media);
+router.put("/media/:mediaId/actors/:actorId", userRoutes.add_actor_to_media);
 router.delete("/media/:id", userRoutes.delete_media);
 router.put(
   "/media/:id/actors",
@@ -36,6 +39,6 @@ router.put(
   body("site").notEmpty().isURL(),
   userRoutes.update_actors
 );
-router.delete("/media/:id/actors/:name", userRoutes.delete_actor);
+router.delete("/media/:mediaId/actors/:actorId", userRoutes.delete_actor);
 
 module.exports = router;

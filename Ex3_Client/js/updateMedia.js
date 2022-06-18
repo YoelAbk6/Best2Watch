@@ -22,7 +22,7 @@ $(document).ready(function () {
 
   $("#updateMediaForm > #movieRDInputDiv > #movieRDInput").attr(
     "value",
-    localStorage.getItem("mediaRD")
+    reformatDateString(localStorage.getItem("mediaRD"))
   );
 
   $("#updateMediaForm > #moviePicInputDiv > #moviePicInput").attr(
@@ -57,12 +57,10 @@ $(document).ready(function () {
         i,
         seasonInput = "";
       for (i = 0; i < nSeasons; i++) {
-        seasonInput += `<label for="season${
-          i + 1
-        }">Number of episodes in season ${i + 1}</label>
-      <input type="number" class="form-control" id="season${
-        i + 1
-      }" min="1" required>`;
+        seasonInput += `<label for="season${i + 1
+          }">Number of episodes in season ${i + 1}</label>
+      <input type="number" class="form-control" id="season${i + 1
+          }" min="1" required>`;
       }
       $("#updateMediaForm > #seriesHolder > #seasonsHolder").html(seasonInput);
     }
@@ -74,6 +72,10 @@ $(document).ready(function () {
   });
 });
 
+//Reformatsa date string
+function reformatDateString(s) {
+  return s.split("/").reverse().join("-");
+}
 //The function that create the JSON and sends it to the server
 function update() {
   let series = [],
@@ -92,39 +94,32 @@ function update() {
 
   //Add only the value that changed(comparing to the localStorage or empty fields)
   let ret = `{
-    ${
-      $("#movieNameInput").val() !== localStorage.getItem("mediaTitle")
-        ? '"name": ' + '"' + $("#movieNameInput").val() + '",'
-        : ""
+    ${$("#movieNameInput").val() !== localStorage.getItem("mediaTitle")
+      ? '"name": ' + '"' + $("#movieNameInput").val() + '",'
+      : ""
     }
-    ${
-      $("#moviePicInput").val() !== localStorage.getItem("mediaUrl")
-        ? '"picture": ' + '"' + $("#moviePicInput").val() + '",'
-        : ""
+    ${$("#moviePicInput").val() !== localStorage.getItem("mediaUrl")
+      ? '"picture": ' + '"' + $("#moviePicInput").val() + '",'
+      : ""
     }
-    ${
-      $("#movieDirectorInput").val() !== ""
-        ? '"director": ' + '"' + $("#movieDirectorInput").val() + '",'
-        : ""
+    ${$("#movieDirectorInput").val() !== ""
+      ? '"director": ' + '"' + $("#movieDirectorInput").val() + '",'
+      : ""
     }
-    ${
-      $("#movieRDInput").val() !== localStorage.getItem("mediaRD")
-        ? '"date": ' + '"' + $("#movieRDInput").val() + '",'
-        : ""
+    ${$("#movieRDInput").val() !== localStorage.getItem("mediaRD")
+      ? '"date": ' + '"' + $("#movieRDInput").val() + '",'
+      : ""
     }
-    ${
-      $("#movieRatingInput").val() !== localStorage.getItem("mediaRating")
-        ? '"rating": ' + '"' + $("#movieRatingInput").val() + '",'
-        : ""
+    ${$("#movieRatingInput").val() !== localStorage.getItem("mediaRating")
+      ? '"rating": ' + '"' + $("#movieRatingInput").val() + '",'
+      : ""
     }
-    ${
-      '"isSeries": ' +
-      ($("#seriesCheckbox").is(":checked") ? true + "," : false)
+    ${'"isSeries": ' +
+    ($("#seriesCheckbox").is(":checked") ? true + "," : false)
     }
-    ${
-      $("#seriesCheckbox").is(":checked")
-        ? '"series_details": [' + series + "]"
-        : ""
+    ${$("#seriesCheckbox").is(":checked")
+      ? '"series_details": [' + series + "]"
+      : ""
     }
   }`;
 
