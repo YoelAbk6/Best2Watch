@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="../js/addActor.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <title>New Acotr</title>
+</head>
+<body>
+    <h1 class="display-1">New Actor</h1>
+    <form id="newActorForm">
+        <div class="form-group" id="actorNameInputDiv">
+            <label for="actorNameInput">Actor Name</label>
+            <input type="text" name="name" class="form-control" id="actorNameInput" required>
+        </div>
+        <div class="form-check" id="actorPicInputDiv">
+            <label for="actorPicInput">Picture URL</label>
+            <input type="url" name="picture" class="form-control" id="actorPicInput" required>
+        </div>
+        <div class="form-check" id="actorSiteInputDiv">
+            <label for="actorSiteInput">Site URL</label>
+            <input type="url" name="site" class="form-control" id="actorSiteInput" required>
+        </div>
+        <button type="submit" name="submit"class="btn btn-primary" ">Submit</button>
+      </form>
+</body>
+</html>
