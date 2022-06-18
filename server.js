@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("../Ex3/Ex3_Server/db/mongoose");
 
 (bodyParser = require("body-parser")),
   (path = require("path")),
@@ -23,6 +24,11 @@ app.use(
   express.static(path.join(__dirname, "Ex3_Client/html/updateMedia.html"))
 );
 
+app.use(
+  "/addActor",
+  express.static(path.join(__dirname, "Ex3_Client/html/addActor.html"))
+)
+
 app.use("/css", express.static(path.join(__dirname, "Ex3_Client/css")));
 app.use("/js", express.static(path.join(__dirname, "Ex3_Client/js")));
 
@@ -33,3 +39,4 @@ app.use("/", routers);
 app.listen(port, () => {
   console.log(`listening on port ${port}...`);
 });
+
